@@ -1,8 +1,8 @@
-FROM node:18 AS builder
+FROM node:18 AS build
 
 WORKDIR /app
 
-COPY package.json yarn.lock ./
+COPY package*.json ./
 
 RUN yarn install
 
@@ -10,11 +10,11 @@ COPY . .
 
 RUN yarn build
 
-FROM nginx:stable-alpine
+FROM nginx:alpine
 
-COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=build /app/build /usr/share/nginx/html
 
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY museum21.conf /etc/nginx/museum21.conf
 
 EXPOSE 80
 
